@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Fractal Story Outliner — outline complex stories from macro arcs to micro beats with fractal precision.">
+    <title>Fractal Story Outliner</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23008cff'/%3E%3Cpath d='M20 32c0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='4' fill='white'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --bg: #0b1020;
+        --bg-2: #0e1428;
+        --text: #e9eef8;
+        --muted: #a9b3c7;
+        --card: rgba(255, 255, 255, 0.06);
+        --card-border: rgba(255, 255, 255, 0.12);
+        --accent: #7ad1ff;
+        --accent-2: #5fd2b5;
+        --shadow: rgba(0, 0, 0, 0.35);
+        --maxw: 1120px;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f7f9fc;
+          --bg-2: #eef3fb;
+          --text: #0f172a;
+          --muted: #46546b;
+          --card: rgba(255, 255, 255, 0.75);
+          --card-border: rgba(15, 23, 42, 0.08);
+          --accent: #0050ff;
+          --accent-2: #00a37a;
+          --shadow: rgba(16, 24, 40, 0.07);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+        color: var(--text);
+        background: radial-gradient(1200px 800px at 10% 10%, #163f66 0%, transparent 50%),
+                    radial-gradient(1000px 700px at 90% 20%, #2b6b5b 0%, transparent 50%),
+                    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        background-attachment: fixed;
+        line-height: 1.6;
+      }
+
+      .wrap {
+        min-height: 100dvh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      header {
+        width: 100%;
+      }
+      .nav {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px clamp(16px, 4vw, 24px);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .brand-logo {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: conic-gradient(from 200deg, var(--accent), var(--accent-2));
+        box-shadow: 0 6px 18px var(--shadow), inset 0 0 0 1px var(--card-border);
+      }
+      .brand-name {
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+
+      main { width: 100%; }
+      .hero {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 40px clamp(16px, 4vw, 24px) 72px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: clamp(24px, 5vw, 56px);
+        align-items: center;
+      }
+      @media (max-width: 980px) {
+        .hero { grid-template-columns: 1fr; padding-bottom: 48px; }
+      }
+
+      .card {
+        background: var(--card);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--card-border);
+        border-radius: 18px;
+        box-shadow: 0 20px 40px var(--shadow);
+      }
+
+      .hero-copy {
+        padding: clamp(20px, 3vw, 28px);
+      }
+      .eyebrow {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--card-border);
+        background: rgba(255,255,255,0.06);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      h1 {
+        margin: 14px 0 10px;
+        font-size: clamp(28px, 4.8vw, 52px);
+        line-height: 1.08;
+        letter-spacing: -0.4px;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: clamp(16px, 2.2vw, 18px);
+        margin-bottom: 22px;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .btn {
+        appearance: none;
+        cursor: pointer;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--text);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 10px 20px var(--shadow);
+      }
+      .btn-primary:hover { transform: translateY(-1px); }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--card-border);
+      }
+
+      .hero-visual {
+        padding: clamp(16px, 3vw, 24px);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+      }
+      @media (max-width: 600px) {
+        .grid { grid-template-columns: repeat(4, 1fr); }
+      }
+      .grid .cell {
+        aspect-ratio: 1/1;
+        border-radius: 12px;
+        border: 1px dashed var(--card-border);
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      }
+      .grid .cell::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(240px 140px at 20% 10%, rgba(122,209,255,0.25), transparent 60%),
+                    radial-gradient(240px 140px at 90% 90%, rgba(95,210,181,0.25), transparent 60%);
+        mix-blend-mode: screen;
+      }
+      .cell .mini {
+        position: absolute;
+        inset: 14% 14% 14% 14%;
+        border-radius: 8px;
+        border: 1px solid var(--card-border);
+        background: rgba(0,0,0,0.1);
+      }
+      .cell.highlight {
+        border-style: solid;
+        background: linear-gradient(135deg, rgba(122,209,255,0.2), rgba(95,210,181,0.2));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+      }
+
+      .features {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 clamp(16px, 4vw, 24px) 80px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(16px, 3vw, 28px);
+      }
+      @media (max-width: 980px) {
+        .features { grid-template-columns: 1fr; padding-bottom: 56px; }
+      }
+      .feature {
+        padding: 18px 20px;
+        border-radius: 16px;
+        border: 1px solid var(--card-border);
+        background: var(--card);
+      }
+      .feature h3 {
+        margin: 6px 0 8px;
+        letter-spacing: -0.2px;
+      }
+      .feature p { color: var(--muted); margin: 0; }
+
+      footer {
+        border-top: 1px solid var(--card-border);
+        margin-top: 20px;
+      }
+      .foot {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 18px clamp(16px, 4vw, 24px) 26px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .small { font-size: 13px; }
+      .link { color: var(--text); text-underline-offset: 4px; }
+      .link:hover { color: var(--accent-2); }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <nav class="nav" aria-label="Primary">
+          <a class="brand" href="#">
+            <span class="brand-logo" aria-hidden="true"></span>
+            <span class="brand-name">Fractal Story Outliner</span>
+          </a>
+          <div class="small" aria-hidden="true">Draft • v0.1</div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="card hero-copy">
+            <span class="eyebrow">Structure without losing flow</span>
+            <h1>Outline stories like a fractal — from arcs to beats</h1>
+            <p class="subtitle">
+              Break big narratives into nested pieces that stay in sync. Zoom out to theme, zoom in to the sentence. All in one canvas.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="#get-started">
+                <span aria-hidden="true">✨</span>
+                <span>Get Started</span>
+              </a>
+              <a class="btn btn-ghost" href="#learn-more">Learn More</a>
+            </div>
+          </div>
+
+          <div class="card hero-visual" aria-hidden="true">
+            <div class="grid">
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell highlight"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell highlight"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell highlight"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell highlight"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell highlight"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+              <div class="cell"><div class="mini"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="learn-more" class="features">
+          <article class="feature">
+            <h3>Nested outlining</h3>
+            <p>Create nodes within nodes to mirror your story’s structure at any depth.</p>
+          </article>
+          <article class="feature">
+            <h3>Bidirectional syncing</h3>
+            <p>Changes at one level flow up and down the tree to keep context intact.</p>
+          </article>
+          <article class="feature">
+            <h3>Focus without friction</h3>
+            <p>Zoom into a beat, then pop back out to an arc with a single gesture.</p>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <div class="foot">
+          <div class="small">© <span id="year"></span> Fractal Story Outliner</div>
+          <div class="small"><a class="link" href="#get-started">Roadmap</a> · <a class="link" href="#">Privacy</a></div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear().toString();
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          alert('Command Palette coming soon ✨');
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+  </html>
+
+
